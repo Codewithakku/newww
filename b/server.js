@@ -11,6 +11,11 @@ app.use(express.json()); // Middleware to parse JSON
 
 const FILE_PATH = path.join(__dirname, 'signup.json');
 
+app.get('/', (req, res) => {
+  res.send("Here render first file like login");
+});
+
+
 // Route to add data
 app.post('/add', (req, res) => 
 {
