@@ -1,5 +1,6 @@
 import React from 'react';
 import { Avatar, HStack } from "@chakra-ui/react"
+
 const Left = ({ users, onSelectUser }) => {
   return (
     
@@ -15,10 +16,8 @@ const Left = ({ users, onSelectUser }) => {
       <h5 className="p-3">Contacts</h5>
 
       {users.map(user => (
-        <div key={user.email} className="p-3 border-bottom"
-            style={{ cursor: 'pointer', marginLeft: 20 }}
-            onClick={() => onSelectUser(user)}
-        >
+        <div key={user.email} className="p-3 border-bottom" style={{ cursor: 'pointer', marginLeft: 20 }} onClick={() => onSelectUser(user)}>
+
           <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" className="rounded-circle" 
            style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: 13 , }} alt="Avatar" />
   

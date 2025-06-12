@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+;
 
 export default function Signup() {
+
   const [formData, setFormData] = useState({
     username: '',
     mobile: '',
@@ -17,15 +19,16 @@ export default function Signup() {
   };
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await axios.post('http://localhost:3000/add', formData);
-        console.log('Server response:', response.data);
-        alert('Signup successful!');
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        alert('Signup failed!');
-      }
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3000/add', formData);
+      console.log('Server response:', response.data);
+      alert('Signup successful!');
+      navigate('/chat'); // Navigate to chat page after successful signup
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert(error.response?.data || 'Signup failed! Please try again.');
+    }
   };
 
   return (
@@ -49,7 +52,7 @@ export default function Signup() {
               </div>
               <div className="mb-3">
                   <label htmlFor="password" className="form-label">Password</label>
-                  <input type="text" className="form-control" id="password" required value={formData.password} onChange={handleChange} />
+                  <input type="password" className="form-control" id="password" required value={formData.password} onChange={handleChange} />
               </div>
                   <button type="submit" className="btn btn-primary w-100">Sign Up</button>
             </form>

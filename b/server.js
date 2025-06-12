@@ -9,7 +9,7 @@ app.use(cors());              //and so frontend mathi alag port like 5000 mathi 
 
 app.use(express.json()); // Middleware to parse JSON
 
-const FILE_PATH = path.join(__dirname, 'signup.json');
+const FILE_PATH = path.join(__dirname, 'userModel.json');
 
 app.get('/', (req, res) => {
   res.send("Here render first file like login");
