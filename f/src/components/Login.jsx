@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
-export default function Signup() {
+export default function Login() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: '',
-    mobile: '',
-    email: '',
     password: ''
   });
 
@@ -22,11 +20,11 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/add', formData);
-      alert('Signup successful!');
+      const response = await axios.post('http://localhost:3000/login', formData);
+      alert('Login successful!');
       navigate('/chat');
     } catch (error) {
-      alert(error.response?.data || 'Signup failed! Please try again.');
+      alert(error.response?.data || 'Login failed! Please try again.');
     }
   };
 
@@ -35,9 +33,9 @@ export default function Signup() {
       <form
         onSubmit={handleSubmit}
         className="p-4 rounded border shadow bg-white w-100"
-        style={{ maxWidth: '450px' }}
+        style={{ maxWidth: '400px' }}
       >
-        <h2 className="text-center mb-4 text-primary">Create Account</h2>
+        <h2 className="text-center mb-4 text-primary">Login</h2>
 
         {/* Username */}
         <div className="mb-3 text-start">
@@ -47,32 +45,6 @@ export default function Signup() {
             id="username"
             required
             value={formData.username}
-            onChange={handleChange}
-            className="form-control"
-          />
-        </div>
-
-        {/* Mobile Number */}
-        <div className="mb-3 text-start">
-          <label htmlFor="mobile" className="form-label">Mobile Number</label>
-          <input
-            type="tel"
-            id="mobile"
-            required
-            value={formData.mobile}
-            onChange={handleChange}
-            className="form-control"
-          />
-        </div>
-
-        {/* Email */}
-        <div className="mb-3 text-start">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input
-            type="email"
-            id="email"
-            required
-            value={formData.email}
             onChange={handleChange}
             className="form-control"
           />
@@ -93,13 +65,13 @@ export default function Signup() {
 
         {/* Submit Button */}
         <div className="d-grid mb-3">
-          <button type="submit" className="btn btn-primary">Register</button>
+          <button type="submit" className="btn btn-primary">Login</button>
         </div>
 
-        {/* Login Redirect */}
+        {/* Signup Link */}
         <p className="text-center text-muted">
-          Already have an account?{' '}
-          <Link to="/login" className="text-decoration-none">Login</Link>
+          Don't have an account?{' '}
+          <Link to="/" className="text-decoration-none">Signup</Link>
         </p>
       </form>
     </div>

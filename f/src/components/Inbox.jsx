@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../pages/Navbar';
 import Left from '../pages/Left';
 import Right from '../pages/Right';
-
+import RightSideNav  from '../components/RightSideNav';
 function Inbox() {
   // Dummy users
   const [users] = useState([
@@ -21,8 +21,9 @@ function Inbox() {
     // Reset messages or fetch from DB
     setMessages([
       { text: `Hello from ${user.name}`, isSender: false },
-      { text: "Hi!", isSender: true }
-      
+      { text: "Hi!", isSender: true },
+      { text: 'hmm', isSender: false },
+      { text: "yes!", isSender: true },
     ]);
   };
 
@@ -31,13 +32,15 @@ function Inbox() {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid pt-2">
+    
       <Navbar />
+
       <div className="row">
-          <Left users={users} onSelectUser={handleSelectUser} /> {/* here we passes props like this  users={users}  props will catch in Left component */}
+          <Left users={users} onSelectUser={handleSelectUser}  /> {/* here we passes props like this  users={users}  props will catch in Left component */}
          
-        {selectedUser ? (
-          <Right messages={messages} onSendMessage={handleSendMessage} />
+         {selectedUser ? (
+          <Right messages={messages} onSendMessage={handleSendMessage} selectedUser={selectedUser} />
         ) : (
           <div className="col-md-8 d-flex align-items-center justify-content-center">
             <p>Please select a user to start chatting.</p>
