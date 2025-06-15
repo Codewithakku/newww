@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Offcanvas } from 'react-bootstrap';
-import RightSideNav  from '../components/RightSideNav';
-import Left from './Left';
+import Profile from '../components/Profile';
 
-const Right = ({ messages, onSendMessage,selectedUser}) => 
-    
-  {
-  const [input, setInput] = React.useState('');
+const Right = ({ messages, onSendMessage, selectedUser }) => {
+  
+  const [input, setInput] = useState('');
 
   const handleSend = () => {
     if (input.trim() === '') return;
@@ -16,47 +14,40 @@ const Right = ({ messages, onSendMessage,selectedUser}) =>
 
   return (
     <div className="col-md-8 d-flex flex-column position-relative">
-      <div className=' d-flex'>
-              
-        <div className=' d-flex'>
-          <RightSideNav/>
-          <h5 className='pt-4' style={{marginLeft: '-10px' ,marginTop:'3px'}} >{selectedUser.name}</h5>
+      <div className='d-flex'>
+          <Profile />
+          <h5 className='pt-4' style={{ marginLeft: '-10px', marginTop: '3px' }}>{selectedUser.username}</h5>
+      </div>
 
-        </div>
-      </div>  
+      <div className="flex-grow-1 p-3 overflow-auto"
+            style={{
+              height: '80vh',
+              overflowY: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}>
+        
+          {messages.map((msg, index) => (
       <div
-        className="flex-grow-1 p-3 overflow-auto"
-        style={{
-          height: '80vh',
-          overflowY: 'auto',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        }}
-      >
-        {messages.map((msg, index) => (
-          <div
             key={index}
             className={`mb-2 d-flex ${msg.isSender ? 'justify-content-end' : 'justify-content-start'}`}
           >
-            <div className={`p-2 rounded shadow-sm`} style={{
+            <div className="p-2 rounded shadow-sm"
+              style={{
                 backgroundColor: msg.isSender ? '#0d6efd' : '#f1f1f1',
-                color: msg.isSender ? '#fff' : '#000',         //msg font color style
-                textAlign: msg.isSender ? 'right' : 'left',    //sender hoi to 
+                color: msg.isSender ? '#fff' : '#000',
+                textAlign: msg.isSender ? 'right' : 'left',
                 maxWidth: '75%',
-                display: 'inline-block',
                 wordBreak: 'break-word',
-
               }}>
               {msg.text}
             </div>
-
           </div>
         ))}
       </div>
 
-      {/* Message send footer section */}
-      <div className="p-3 border-top" style={{ position: 'fixed', bottom: 0, width: '66.66%', }} >
-      
+      {/* Footer message box */}
+      <div className="p-3 border-top" style={{ position: 'fixed', bottom: 0, width: '66.66%' }}>
         <div className="input-group">
           <input
             type="text"

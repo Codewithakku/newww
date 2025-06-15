@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Offcanvas } from 'react-bootstrap';
 import '../css/navbar.css';
 
-function RightSideNav() {
+function Profile() {
   const [show, setShow] = React.useState(false);
 
   const handleClose = () => setShow(false);
@@ -42,5 +42,4 @@ function RightSideNav() {
   );
 }
 
-export default RightSideNav;
-
+export default Profile;

@@ -2,25 +2,23 @@ import React, { useState } from 'react';
 import Navbar from '../pages/Navbar';
 import Left from '../pages/Left';
 import Right from '../pages/Right';
-import RightSideNav  from '../components/RightSideNav';
+import Profile from '../components/Profile'
 function Inbox() {
-  // Dummy users
-  const [users] = useState([
-    { name: 'Alice', email: 'alice@example.com' },
-    { name: 'Bob', email: 'bob@example.com' },
-    { name: 'Charlie', email: 'charlie@example.com' },
-    { name: 'chirag', email: 'chirag123@gmail.com'}
-  ]);
-
+  
   // Messages and selected user state
   const [messages, setMessages] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleSelectUser = (user) => {
     setSelectedUser(user);
+    
+    localStorage.setItem('selectedUser', JSON.stringify(user));
+    const storedUser = JSON.parse(localStorage.getItem('selectedUser'));
+    console.log(storedUser.username);
+   
     // Reset messages or fetch from DB
     setMessages([
-      { text: `Hello from ${user.name}`, isSender: false },
+      { text: `Hello from ${storedUser.username}`, isSender: false },
       { text: "Hi!", isSender: true },
       { text: 'hmm', isSender: false },
       { text: "yes!", isSender: true },
@@ -37,7 +35,7 @@ function Inbox() {
       <Navbar />
 
       <div className="row">
-          <Left users={users} onSelectUser={handleSelectUser}  /> {/* here we passes props like this  users={users}  props will catch in Left component */}
+          <Left  onSelectUser={handleSelectUser}  /> {/* here we passes props like this  users={users}  props will catch in Left component */}
          
          {selectedUser ? (
           <Right messages={messages} onSendMessage={handleSendMessage} selectedUser={selectedUser} />
@@ -52,3 +50,4 @@ function Inbox() {
 }
 
 export default Inbox;
+

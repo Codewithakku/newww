@@ -1,3 +1,4 @@
+const db = require('./config/db');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -17,32 +18,8 @@ app.get('/', (req, res) => {
 
 
 // Route to add data
-app.post('/add', (req, res) => 
-{
-  const newData = req.body;
-
-  // Step 1: Read existing data which come from in body
-  fs.readFile(FILE_PATH, 'utf8', (err, fileData) => {
-    let dataArray = [];  //this dataArray is tempary... inside  array we store body data and  after through this array store data in Json file 
-
-    if (!err && fileData) {
-      try {
-        dataArray = JSON.parse(fileData);
-      } catch (parseErr) {
-        return res.status(500).send('Error parsing JSON');
-      }
-    }
-
-    // Step 2: Add new data
-    dataArray.push(newData);
-
-    // Step 3: Write updated data back in  signup.json
-    fs.writeFile(FILE_PATH, JSON.stringify(dataArray, null, 2), (writeErr) => {
-      if (writeErr) return res.status(500).send('Error writing file');
-      res.send('✅ Data added successfully!');
-    });
-  });
-});
+const userRoutes = require('./routes/userRoutes');
+app.use('/', userRoutes);
 
 // Start the server
 app.listen(PORT, () => {

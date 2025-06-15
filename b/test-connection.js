@@ -1,46 +1,75 @@
 const mysql = require('mysql2');
 
-const connection = mysql.createConnection({
+// Create MySQL connection (no DB yet)
+const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'Aakash@159', // your MySQL password
-  database: 'chatapp'
+  password: 'Aakash@159'
 });
 
-connection.connect((err) => {
+// Connect to MySQL
+db.connect((err) => {
   if (err) {
     console.error('❌ Connection failed:', err.message);
     return;
   }
-  console.log('✅ Connected to MySQL database.');
+  console.log('✅ Connected to MySQL server.');
 
-  // 1. Create a test table
-  const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS test_users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(50),
-      email VARCHAR(100)
-    )
-  `;
-  connection.query(createTableQuery, (err) => {
-    if (err) return console.error('❌ Table creation error:', err.message);
+  // Create DB if not exists
+  db.query(`CREATE DATABASE IF NOT EXISTS chatapp`, (err) => {
+    if (err) {
+      console.error('❌ Database creation failed:', err.message);
+      return;
+    }
+    console.log('✅ Database "chatapp" ready.');
 
-    console.log('✅ test_users table ready.');
+    // Switch to chatapp DB
+    db.changeUser({ database: 'chatapp' }, (err) => {
+      if (err) {
+        console.error('❌ Failed to switch to chatapp DB:', err.message);
+        return;
+      }
 
-    // 2. Insert a test user
-    const insertQuery = `INSERT INTO test_users (name, email) VALUES (?, ?)`;
-    connection.query(insertQuery, ['Aakash', 'aakash@example.com'], (err) => {
-      if (err) return console.error('❌ Insert error:', err.message);
+      // Create users table
+      const createUsersTable = `
+        CREATE TABLE IF NOT EXISTS users (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          username VARCHAR(50) NOT NULL,
+          mobile VARCHAR(15) NOT NULL,
+          email VARCHAR(100) NOT NULL UNIQUE,
+          password VARCHAR(255) NOT NULL,
+          profile_url VARCHAR(255)
+        )
+      `;
 
-      console.log('✅ Test user inserted.');
+      db.query(createUsersTable, (err) => {
+        if (err) {
+          console.error('❌ Users table creation failed:', err.message);
+          return;
+        }
+        console.log('✅ "users" table ready.');
 
-      // 3. Fetch users
-      connection.query(`SELECT * FROM test_users`, (err, results) => {
-        if (err) return console.error('❌ Select error:', err.message);
+        // Create messages table
+        const createMessagesTable = `
+          CREATE TABLE IF NOT EXISTS messages (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            sender_id INT NOT NULL,
+            receiver_id INT NOT NULL,
+            message TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+          )
+        `;
 
-        console.log('✅ Users from DB:', results);
-
-        connection.end(); // Close after all done
+        db.query(createMessagesTable, (err) => {
+          if (err) {
+            console.error('❌ Messages table creation failed:', err.message);
+            return;
+          }
+          console.log('✅ "messages" table ready.');
+          db.end(); // Close connection after setup
+        });
       });
     });
   });
