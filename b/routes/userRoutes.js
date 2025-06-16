@@ -5,8 +5,8 @@ const { registerUser } = require('../controllers/userControllers');
 const { getAllUsers } = require('../controllers/userControllers');
 const { loginUser } = require('../controllers/userControllers'); 
 
-router.get('/users', getAllUsers); // GET /users to fetch all users
-router.post('/add', registerUser);
+router.post('/register', registerUser);
 router.post('/login',loginUser);
+router.get('/users', getAllUsers); // GET /users to fetch all users
 
 module.exports = router;

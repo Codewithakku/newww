@@ -15,23 +15,17 @@ const Right = ({ messages, onSendMessage, selectedUser }) => {
   return (
     <div className="col-md-8 d-flex flex-column position-relative">
       <div className='d-flex'>
-          <Profile />
+          <Profile selectedUser={selectedUser}/>
           <h5 className='pt-4' style={{ marginLeft: '-10px', marginTop: '3px' }}>{selectedUser.username}</h5>
       </div>
 
       <div className="flex-grow-1 p-3 overflow-auto"
-            style={{
-              height: '80vh',
-              overflowY: 'auto',
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-            }}>
-        
-          {messages.map((msg, index) => (
-      <div
-            key={index}
-            className={`mb-2 d-flex ${msg.isSender ? 'justify-content-end' : 'justify-content-start'}`}
-          >
+            style={{ height: '80vh', overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', }}>
+  
+          
+      {messages.map((msg, index) => (
+        <div key={index} className={`mb-2 d-flex ${msg.isSender ? 'justify-content-end' : 'justify-content-start'}`} >       
+           
             <div className="p-2 rounded shadow-sm"
               style={{
                 backgroundColor: msg.isSender ? '#0d6efd' : '#f1f1f1',
@@ -42,7 +36,8 @@ const Right = ({ messages, onSendMessage, selectedUser }) => {
               }}>
               {msg.text}
             </div>
-          </div>
+
+        </div>
         ))}
       </div>
 

@@ -9,12 +9,13 @@ function Inbox() {
   const [messages, setMessages] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const handleSelectUser = (user) => {
+  const handleSelectUser = (user) => {  //thia function call when we click on contacts
+    
     setSelectedUser(user);
     
     localStorage.setItem('selectedUser', JSON.stringify(user));
     const storedUser = JSON.parse(localStorage.getItem('selectedUser'));
-    console.log(storedUser.username);
+    console.log(storedUser);
    
     // Reset messages or fetch from DB
     setMessages([

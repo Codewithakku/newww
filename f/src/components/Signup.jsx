@@ -22,9 +22,9 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/add', formData);
+      const response = await axios.post('http://localhost:3000/register', formData);
       alert('Signup successful!');
-      navigate('/chat');
+      navigate('/login');
     } catch (error) {
       alert(error.response?.data || 'Signup failed! Please try again.');
     }
