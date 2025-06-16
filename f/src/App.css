@@ -1,0 +1,9 @@
+.user-item {
+  cursor: pointer;
+  margin-left: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.user-item:hover {
+  background-color: #f0f0f0; /* Change this to your desired color */
+}
