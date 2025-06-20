@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Avatar, HStack } from "@chakra-ui/react";
+import { Avatar } from "@chakra-ui/react";
 
 const Left = ({ onSelectUser }) => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); //all db data store in users array 
 
   useEffect(() => {
     const getUsers = async () => {
@@ -30,10 +30,12 @@ const Left = ({ onSelectUser }) => {
 
       {users.map(user => (
         <div key={user.id} className="p-3 border-bottom" style={{ cursor: 'pointer', marginLeft: 20 }} onClick={() => onSelectUser(user)}>
-          <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" className="rounded-circle"
-            style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: 13 }} alt="Avatar" />
+          <label>
+            <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" className="rounded-circle"
+              style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: 13 }} alt="Avatar" />
 
-          <b style={{ paddingRight: 10 }}>{user.username}</b>
+            <b style={{ paddingRight: 10 }}>{user.username}</b>
+          </label>
         </div>
       ))}
     </div>

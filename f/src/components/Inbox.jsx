@@ -5,12 +5,13 @@ import Right from '../pages/Right';
 import Profile from '../components/Profile'
 function Inbox() {
   
+  
   // Messages and selected user state
   const [messages, setMessages] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleSelectUser = (user) => {  //thia function call when we click on contacts
-    
+  
     setSelectedUser(user);
     
     localStorage.setItem('selectedUser', JSON.stringify(user));
@@ -35,7 +36,7 @@ function Inbox() {
     
       <Navbar />
 
-      <div className="row">
+     <div className="row">
           <Left  onSelectUser={handleSelectUser}  /> {/* here we passes props like this  users={users}  props will catch in Left component */}
          
          {selectedUser ? (
@@ -45,7 +46,7 @@ function Inbox() {
             <p>Please select a user to start chatting.</p>
           </div>
         )}
-      </div>
+      </div> 
     </div>
   );
 }

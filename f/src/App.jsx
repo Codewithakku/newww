@@ -3,7 +3,9 @@ import { Routes,Route } from "react-router-dom";
 
 import Inbox from "./components/Inbox";
 import Signup from "./components/Signup";
-import Login from "./components/Login"
+import Login from './components/Login';
+
+
 
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
               <Route path="/" element={<Signup/>} />
               <Route path="/inbox" element={<Inbox />} />
               <Route path="/login" element={<Login />} />
+             
+
             </Routes>
         </div>
     </div>
