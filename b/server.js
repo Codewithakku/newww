@@ -2,6 +2,8 @@ const db = require('./config/db');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const userRoutes = require('./routes/userRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 const app = express();
 const PORT = 3000;
 
@@ -18,10 +20,11 @@ app.get('/', (req, res) => {
 
 
 // Route to add data
-const userRoutes = require('./routes/userRoutes');
-app.use('/', userRoutes);
 
+app.use('/', userRoutes);
+app.use('/chat', chatRoutes);
 // Start the server
+
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
