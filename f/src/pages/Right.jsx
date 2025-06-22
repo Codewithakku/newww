@@ -14,7 +14,7 @@ const Right = ({ selectedUser }) => {
   useEffect(() => {
     if (!selectedUser || !loggedUser) return;
 
-    axios.get('http://localhost:3000/chat/messages', {
+    axios.get('http://localhost:3000/chat/messages',{
       params: {
         senderId: loggedUser.id,
         receiverId: selectedUser.id,
@@ -51,9 +51,9 @@ const Right = ({ selectedUser }) => {
   };
 
   return (
-    <div className="col-md-8 d-flex flex-column" style={{ height: '100vh'}}>
+    <div className="col-md-8 d-flex flex-column" style={{ height: '85vh '  }}>  
       {/* Header */}
-      <div className="d-flex p-3 border-bottom align-items-center">
+      <div className="d-flex  border-bottom align-items-center">
         <Profile selectedUser={selectedUser} />
         <h5 className="ms-2 pt-2">{selectedUser.username}</h5>
       </div>
@@ -74,6 +74,14 @@ const Right = ({ selectedUser }) => {
               }}
             >
               {msg.message}
+             <div style={{ fontSize: '0.75rem', marginTop: '2px' }}>
+                {new Date(msg.timestamp).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                 })}
+            </div>
+
             </div>
           </div>
         ))}

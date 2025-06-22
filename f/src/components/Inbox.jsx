@@ -3,28 +3,22 @@ import Navbar from '../pages/Navbar';
 import Left from '../pages/Left';
 import Right from '../pages/Right';
 import Profile from '../components/Profile'
+
 function Inbox() {
-  
-  
+
   // Messages and selected user state
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]);           //messages is array
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleSelectUser = (user) => {  //thia function call when we click on contacts
-  
+
     setSelectedUser(user);
     
+    //selected user store in local storage 
     localStorage.setItem('selectedUser', JSON.stringify(user));
     const storedUser = JSON.parse(localStorage.getItem('selectedUser'));
     console.log(storedUser);
    
-    // Reset messages or fetch from DB
-    setMessages([
-      { text: `Hello from ${storedUser.username}`, isSender: false },
-      { text: "Hi!", isSender: true },
-      { text: 'hmm', isSender: false },
-      { text: "yes!", isSender: true },
-    ]);
   };
 
   const handleSendMessage = (message) => {
@@ -34,7 +28,7 @@ function Inbox() {
   return (
     <div className="container-fluid pt-2">
     
-      <Navbar />
+      <Navbar onSelectUser={handleSelectUser} />
 
      <div className="row">
           <Left  onSelectUser={handleSelectUser}  /> {/* here we passes props like this  users={users}  props will catch in Left component */}

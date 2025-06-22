@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 export default function Signup() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({   //formData is an object
     username: '',
     mobile: '',
     email: '',
@@ -15,16 +15,16 @@ export default function Signup() {
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value 
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/register', formData);
-      alert('Signup successful!');
-      navigate('/login');
+      const response = await axios.post('http://localhost:3000/register', formData);   //When data is sent over the network, it doesn't go as a JavaScript object 
+      alert('Signup successful!');                                                     //— it gets converted into a string (JSON format). 
+      navigate('/login');                                                              // Why backend must parse it(parse means convert string into object) like this : app.use(express.json()); 
     } catch (error) {
       alert(error.response?.data || 'Signup failed! Please try again.');
     }
@@ -46,7 +46,7 @@ export default function Signup() {
             type="text"
             id="username"
             required
-            value={formData.username}
+            value={formData.username} //objectname.variablename
             onChange={handleChange}
             className="form-control"
           />

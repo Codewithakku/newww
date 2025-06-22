@@ -12,7 +12,8 @@ app.use(cors());              //and so frontend mathi alag port like 5000 mathi 
 
 app.use(express.json()); // Middleware to parse JSON
 
-const FILE_PATH = path.join(__dirname, 'userModel.json');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 app.get('/', (req, res) => {
   res.send("Here render first file like login");
@@ -23,7 +24,7 @@ app.get('/', (req, res) => {
 
 app.use('/', userRoutes);
 app.use('/chat', chatRoutes);
-// Start the server
+
 
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);

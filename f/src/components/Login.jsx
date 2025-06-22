@@ -20,15 +20,15 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Send login request
+      // Send login request with formData object.....    // On the backend, we access it using req.body.email (not formData.email) because axios automatically converts object to json.... //object mokalsej nai.. ato json format ma mokalse atle... okay
       const response = await axios.post('http://localhost:3000/login', formData);
 
       // Show alert
       alert('Login successful!');
 
       // Store user in localStorage
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      console.log(response.data.user);
+      localStorage.setItem('user', JSON.stringify(response.data.user));  //JavaScript objects (like user), can't be stored directly in localStorage. //and also we can not store number,boolean ,object , array..
+      console.log(response.data.user);                                   //So we convert the object to a string using JSON.stringify().
       // Redirect to inbox
       navigate('/inbox'); 
     } catch (error) {

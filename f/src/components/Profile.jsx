@@ -35,10 +35,15 @@ function Profile() {
     <div className="p-3">
       <button className="circle-btn" onClick={handleShow}>
         <img
-          src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
-          alt="Avatar"
-          style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-        />
+         src={
+            user?.profile_url?.startsWith('/uploads/')
+            ? `http://localhost:3000${user.profile_url}`
+            : `http://localhost:3000/uploads/${user?.profile_url || 'default.jpeg'}`
+         }
+         alt="Avatar"
+         className="rounded-circle shadow border border-2 border-primary"
+         style={{ width: '55px', height: '55px', objectFit: 'cover',}}
+        />     
       </button>
 
       <Offcanvas show={show} onHide={handleClose} placement="end">
@@ -48,7 +53,7 @@ function Profile() {
 
         <Offcanvas.Body className="text-center">
           <img
-            src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
+            src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" 
             className="rounded-circle mb-3"
             alt="User"
             style={{ width: '100px', height: '100px', objectFit: 'cover' }}
@@ -65,13 +70,7 @@ function Profile() {
 
           <div className="d-grid gap-2">
             <Button variant="outline-primary" size="sm" href="/profile">View Profile</Button>
-            <Button
-              variant="outline-primary"
-              size="sm"
-              onClick={() => setShowSettings(true)}
-            >
-              Setting
-            </Button>
+            
 
             <Button style={{background:'white', color:'blue'}} onClick={()=>{
               localStorage.removeItem('selectedUser'); console.log('item deleted')

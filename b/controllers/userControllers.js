@@ -1,3 +1,4 @@
+const { json } = require('express');
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
 
@@ -57,7 +58,7 @@ exports.loginUser = (req, res) => {
 
     // 4) Generate JWT token
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
@@ -70,11 +71,21 @@ exports.loginUser = (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        profile_url:user.profile_url,
         token,
       },
     });
   });
 };
+
+// ===================== LOGOUT USER =====================
+exports.LogoutUser = (req, res) => {
+  // In stateless JWT, logout is handled on client-side by removing the token
+  return res.status(200).json({
+    message: 'Logout successful'
+  });
+};
+
 
 // ===================== GET ALL USERS =====================
 exports.getAllUsers = (req, res) => {
@@ -87,6 +98,7 @@ exports.getAllUsers = (req, res) => {
   });
 };
 
+// ===================== searchUsers =====================
 exports.searchUsers = (req, res) => {
   const search = req.query.search;
   if (!search) return res.json([]);
@@ -101,3 +113,54 @@ exports.searchUsers = (req, res) => {
     res.json(results);
   });
 };
+
+// ===================== updateUser =====================
+exports.updateUser = (req, res) => {
+  const userId = req.params.id;
+  const { username, email, password } = req.body;
+  const profile_url = req.file ? `/uploads/${req.file.filename}` : null;
+
+  const fields = [];
+  const values = [];
+
+  if (username) {
+    fields.push('username = ?');
+    values.push(username);
+  }
+  if (email) {
+    fields.push('email = ?');
+    values.push(email);
+  }
+  if (password) {
+    fields.push('password = ?');
+    values.push(password);
+  }
+  if (profile_url) {
+    fields.push('profile_url = ?');
+    values.push(profile_url);
+  }
+
+  if (fields.length === 0) {
+    return res.status(400).json({ error: 'No fields to update' });
+  }
+
+  values.push(userId);
+
+  const sql = `UPDATE users SET ${fields.join(', ')} WHERE id = ?`;
+
+  db.query(sql, values, (err) => {
+    if (err) return res.status(500).json({ error: 'Update failed' });
+
+    // Fetch updated user
+    db.query('SELECT id, username, email, profile_url FROM users WHERE id = ?', [userId], (err2, results) => {
+      if (err2 || results.length === 0) {
+        return res.status(500).json({ error: 'Failed to fetch updated user' });
+      }
+
+      res.json({ message: 'User updated', user: results[0] });
+    });
+  });
+};
+
+
+
