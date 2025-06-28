@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function Signup() {
   const navigate = useNavigate();
+  const UsernameRef = useRef(null);
+
+  useEffect(()=>{
+    UsernameRef.current.focus();
+  },[])
 
   const [formData, setFormData] = useState({   //formData is an object
     username: '',
@@ -45,6 +50,7 @@ export default function Signup() {
           <input
             type="text"
             id="username"
+            ref={UsernameRef}
             required
             value={formData.username} //objectname.variablename
             onChange={handleChange}

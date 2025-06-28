@@ -70,6 +70,7 @@ function Setting({ show, handleClose, user, setUser }) {
       </Modal.Header>
       <Modal.Body>
         <Form>
+          {/* Username */}
           <Form.Group className="mb-2">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -80,6 +81,7 @@ function Setting({ show, handleClose, user, setUser }) {
             />
           </Form.Group>
 
+          {/* email */}
           <Form.Group className="mb-2">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -90,6 +92,7 @@ function Setting({ show, handleClose, user, setUser }) {
             />
           </Form.Group>
 
+          {/* password */}
           <Form.Group className="mb-2">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -100,6 +103,7 @@ function Setting({ show, handleClose, user, setUser }) {
             />
           </Form.Group>
 
+          {/* image  */}
           <Form.Group className="mb-2">
             <Form.Label>Image</Form.Label>
             <Form.Control

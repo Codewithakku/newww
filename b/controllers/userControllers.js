@@ -89,7 +89,7 @@ exports.LogoutUser = (req, res) => {
 
 // ===================== GET ALL USERS =====================
 exports.getAllUsers = (req, res) => {
-  const sql = 'SELECT id, username, email FROM users';
+  const sql = 'SELECT id, username, email , profile_url FROM users';
 
   db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: 'Database error' });

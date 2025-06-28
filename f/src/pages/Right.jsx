@@ -1,42 +1,42 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import Profile from '../components/Profile';
+import { UserContext } from '../components/UserContext';
 
-const Right = ({ selectedUser }) => {
+const Right = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
   const messagesEndRef = useRef(null);
-  const loggedUser = JSON.parse(localStorage.getItem('user'));
 
-  // Fetch chat history
+  const { user, selectedUser, darkMode } = useContext(UserContext);
+
   useEffect(() => {
-    if (!selectedUser || !loggedUser) return;
+    if (!selectedUser || !user) return;
 
-    axios.get('http://localhost:3000/chat/messages',{
-      params: {
-        senderId: loggedUser.id,
-        receiverId: selectedUser.id,
-      },
-    })
-    .then(res => setMessages(res.data))
-    .catch(err => console.error('Message fetch error:', err));
+    axios
+      .get('http://localhost:3000/chat/messages', {
+        params: {
+          senderId: user.id,
+          receiverId: selectedUser.id,
+        },
+      })
+      .then(res => setMessages(res.data))
+      .catch(err => console.error('Message fetch error:', err));
   }, [selectedUser]);
 
-  // Scroll to latest message when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
-  // Send message
   const handleSend = async () => {
     if (input.trim() === '') return;
 
     const newMessage = {
-      senderId: loggedUser.id,
+      senderId: user.id,
       receiverId: selectedUser.id,
       message: input,
     };
@@ -51,49 +51,63 @@ const Right = ({ selectedUser }) => {
   };
 
   return (
-    <div className="col-md-8 d-flex flex-column" style={{ height: '85vh '  }}>  
+    <div
+      className={`col-md-8 d-flex flex-column ${darkMode ? 'bg-dark text-white' : ''}`}
+      style={{ height: '86.8vh' , }}
+    >
       {/* Header */}
-      <div className="d-flex  border-bottom align-items-center">
+      <div className={`d-flex border-bottom align-items-center p-2 ${darkMode ? 'border-secondary' : ''}`}>
         <Profile selectedUser={selectedUser} />
-        <h5 className="ms-2 pt-2">{selectedUser.username}</h5>
+        <h5 className="pt-2" style={{ marginLeft: '10px' }}>{selectedUser.username}</h5>
       </div>
 
-      {/* Chat messages area */}
-      <div className="flex-grow-1 p-3 overflow-auto" style={{ backgroundColor: '#fafafa', overflowY:'auto',scrollbarWidth:'none' }}>
+      {/* Chat messages */}
+      <div
+        className="flex-grow-1 p-3 overflow-auto"
+        style={{
+          backgroundColor: darkMode ? '#1e1e1e' : '#fafafa',
+          overflowY: 'auto',
+          scrollbarWidth: 'none',
+        }}
+      >
         {messages.map((msg, index) => (
           <div key={index} className={`mb-2 d-flex ${msg.isSender ? 'justify-content-end' : 'justify-content-start'}`}>
             <div
               className="p-2 rounded shadow-sm"
               style={{
-                backgroundColor: msg.isSender ? '#0d6efd' : '#f1f1f1',
-                color: msg.isSender ? '#fff' : '#000',
+                backgroundColor: msg.isSender
+                  ? darkMode ? '#0d6efd' : '#0d6efd'
+                  : darkMode ? '#333' : '#f1f1f1',
+                color: msg.isSender ? '#fff' : darkMode ? '#fff' : '#000',
                 maxWidth: '75%',
-                overflowY: 'auto',
-                scrollbarWidth: 'none'
-
               }}
             >
               {msg.message}
-             <div style={{ fontSize: '0.75rem', marginTop: '2px' }}>
+              <div
+                style={{
+                  fontSize: '0.75rem',
+                  marginTop: '2px',
+                  color: darkMode ? '#ccc' : 'black',
+                }}
+              >
                 {new Date(msg.timestamp).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                 })}
-            </div>
-
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true,
+                })}
+              </div>
             </div>
           </div>
         ))}
-        <div ref={messagesEndRef}></div>
+        <div ref={messagesEndRef}></div> {/* to find newest message */ }
       </div>
 
-      {/* Input area */}
-      <div className="p-3 border-top">
+      {/* Input field */}
+      <div className={`p-3 border-top ${darkMode ? 'border-secondary' : ''}`}>
         <div className="input-group">
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${darkMode ? 'bg-dark text-white border-secondary' : ''}`}
             placeholder="Type a message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}

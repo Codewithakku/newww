@@ -1,32 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Offcanvas } from 'react-bootstrap';
 import '../css/navbar.css';
-import Setting from './Setting';
 import { useNavigate } from 'react-router-dom';
-
+import { UserContext } from './UserContext';
 
 function Profile() {
   const [show, setShow] = useState(false);
-  const [user, setUser] = useState(null);
-  const [showSettings, setShowSettings] = useState(false);
+  const [profileUrl, setProfileUrl] = useState(null);
 
+  const { selectedUser } = useContext(UserContext); // ✅ Only use selectedUser
   const navigate = useNavigate();
+
+  // Update profile URL whenever selectedUser changes
   useEffect(() => {
-    const storedUser = localStorage.getItem('selectedUser');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (selectedUser) {
+      const newProfileUrl = selectedUser.profile_url
+        ? `http://localhost:3000${selectedUser.profile_url}?t=${Date.now()}`
+        : 'http://localhost:3000/uploads/default.jpeg';
+
+      setProfileUrl(newProfileUrl);
     }
-
-    const interval = setInterval(() => {
-      const currentUser = JSON.parse(localStorage.getItem('selectedUser'));
-      if (JSON.stringify(currentUser) !== JSON.stringify(user)) {
-        setUser(currentUser);
-      }
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
+  }, [selectedUser]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -35,15 +30,17 @@ function Profile() {
     <div className="p-3">
       <button className="circle-btn" onClick={handleShow}>
         <img
-         src={
-            user?.profile_url?.startsWith('/uploads/')
-            ? `http://localhost:3000${user.profile_url}`
-            : `http://localhost:3000/uploads/${user?.profile_url || 'default.jpeg'}`
-         }
-         alt="Avatar"
-         className="rounded-circle shadow border border-2 border-primary"
-         style={{ width: '55px', height: '55px', objectFit: 'cover',}}
-        />     
+          key={profileUrl}
+          src={profileUrl || 'http://localhost:3000/uploads/default.jpeg'}
+          alt="Avatar"
+          className="rounded-circle shadow border border-2 border-primary"
+          style={{
+            width: '55px',
+            height: '55px',
+            objectFit: 'cover',
+            marginRight: '1px',
+          }}
+        />
       </button>
 
       <Offcanvas show={show} onHide={handleClose} placement="end">
@@ -53,43 +50,29 @@ function Profile() {
 
         <Offcanvas.Body className="text-center">
           <img
-            src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" 
+            key={profileUrl}
+            src={profileUrl}
             className="rounded-circle mb-3"
             alt="User"
             style={{ width: '100px', height: '100px', objectFit: 'cover' }}
           />
 
-          {user ? (
+          {selectedUser ? (
             <>
-              <h5 className="mb-1">{user.username}</h5>
-              <p className="text-muted mb-3">{user.email}</p>
+              <h5 className="mb-1">{selectedUser.username}</h5>
+              <p className="text-muted mb-3">{selectedUser.email}</p>
             </>
           ) : (
             <p className="text-muted">User not found</p>
           )}
 
           <div className="d-grid gap-2">
-            <Button variant="outline-primary" size="sm" href="/profile">View Profile</Button>
-            
-
-            <Button style={{background:'white', color:'blue'}} onClick={()=>{
-              localStorage.removeItem('selectedUser'); console.log('item deleted')
-              navigate('/login');
-            }}>      
-              Logout
+            <Button variant="outline-primary" size="sm" href="/profile">
+              View Profile
             </Button>
           </div>
         </Offcanvas.Body>
       </Offcanvas>
-
-      
-      <Setting
-        show={showSettings}
-        handleClose={() => setShowSettings(false)}
-        user={user}
-        setUser={setUser}
-      />
-
     </div>
   );
 }

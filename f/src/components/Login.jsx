@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState,useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function Login() {
   const navigate = useNavigate();
+  let emailRef = useRef(null);
+
+  useEffect(()=>{
+    emailRef.current.focus();
+  },[])
 
   const [formData, setFormData] = useState({
     email: '',
@@ -26,7 +31,7 @@ export default function Login() {
       // Show alert
       alert('Login successful!');
 
-      // Store user in localStorage
+      // Store user in localStorage  
       localStorage.setItem('user', JSON.stringify(response.data.user));  //JavaScript objects (like user), can't be stored directly in localStorage. //and also we can not store number,boolean ,object , array..
       console.log(response.data.user);                                   //So we convert the object to a string using JSON.stringify().
       // Redirect to inbox
@@ -45,7 +50,7 @@ export default function Login() {
         {/* Email */}
         <div className="mb-3 text-start">
           <label htmlFor="email" className="form-label">Email</label>
-          <input type="text" id="email" required value={formData.email} onChange={handleChange} className="form-control"/> 
+          <input type="text" id="email" ref={emailRef} required value={formData.email} onChange={handleChange} className="form-control"/> 
         </div>
 
         {/* Password */}

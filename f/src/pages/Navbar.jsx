@@ -1,23 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/navbar.css';
 import SenderProfile from '../components/SenderProfile';
+import { UserContext } from '../components/UserContext';
+import { FaMoon, FaSun } from 'react-icons/fa'; // ✅ Icon import
 
 const Navbar = ({ onSelectUser }) => {
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null); // store logged-in user
 
-  // Get logged-in user from localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
-    }
-  }, []);
+  const { user, setUser, darkMode, toggleDarkMode } = useContext(UserContext);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -29,15 +24,14 @@ const Navbar = ({ onSelectUser }) => {
       axios
         .get(`http://localhost:3000/search?search=${search}`)
         .then(res => {
-          // Filter out the logged-in user from search results
-          const filtered = res.data.filter(user => user.id !== currentUser?.id);
+          const filtered = res.data.filter(u => u.id !== user?.id);
           setResults(filtered);
         })
         .catch(err => console.error(err));
     }, 300);
 
     return () => clearTimeout(delayDebounce);
-  }, [search, currentUser]); // add currentUser as dependency
+  }, [search, user]);
 
   const handleUserClick = (user) => {
     console.log('Selected user:', user);
@@ -47,8 +41,9 @@ const Navbar = ({ onSelectUser }) => {
   };
 
   const handleLogout = () => {
-    axios.post(`http://localhost:3000/logout`)
+    axios.post('http://localhost:3000/logout')
       .then(res => {
+        setUser(null);
         localStorage.removeItem('user');
         alert('Logout successful');
         navigate('/login');
@@ -57,13 +52,13 @@ const Navbar = ({ onSelectUser }) => {
   };
 
   return (
-    <nav className="navbar bg-body-tertiary">
+    <nav className={`navbar ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`} style={{ width: '100%', margin: 0, padding: '10px 20px' }}>
       <div className="container-fluid justify-content-between">
-        
+
         {/* Search Box */}
         <div className="d-flex align-items-center position-relative" style={{ width: '300px' }}>
           <input
-            className="form-control me-2"
+            className={`form-control ${darkMode ? 'bg-dark text-white border-secondary' : ''}`}
             type="search"
             placeholder="Search user..."
             value={search}
@@ -72,30 +67,47 @@ const Navbar = ({ onSelectUser }) => {
 
           {/* Search Results */}
           {results.length > 0 && (
-            <ul className="list-group position-absolute w-100" style={{ zIndex: 1050, marginTop: '225px' }}>
-              {results.map((user) => (
+            <ul className="list-group position-absolute w-100" style={{ zIndex: 1050, top: '100%' }}>
+              {results.map((u) => (
                 <li
-                  key={user.id}
+                  key={u.id}
                   className="list-group-item"
                   style={{
                     cursor: 'pointer',
                     backgroundColor: '#f1f1f1',
                     padding: '10px'
                   }}
-                  onClick={() => handleUserClick(user)}
+                  onClick={() => handleUserClick(u)}
                 >
-                  {user.username}
+                  {u.username}
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        {/* Auth Buttons */}
+        {/* Auth Buttons and Dark Mode Toggle */}
         <div className="d-flex gap-3 align-items-center">
           <SenderProfile />
-          <Link to="/" className="custom-btn">Signup</Link>
+
+          {!user && <Link to="/" className="custom-btn">Signup</Link>}
           <Link to="/login" className="custom-btn" onClick={handleLogout}>Logout</Link>
+
+          {/* Dark Mode Toggle with Icons */}
+          <button
+            className="btn btn-sm"
+            onClick={toggleDarkMode}
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              fontSize: '1.5rem',
+              color: darkMode ? 'white' : 'black',
+              cursor: 'pointer'
+            }}
+            title="Toggle Dark Mode"
+          >
+            {darkMode ? <FaSun /> : <FaMoon />}
+          </button>
         </div>
       </div>
     </nav>
