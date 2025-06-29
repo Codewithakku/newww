@@ -1,15 +1,19 @@
 const { json } = require('express');
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
 
 // 🔐 JWT Secret and Expiry
 const JWT_SECRET = 'mySuperSecretKey123'; // Strong secret for signing
 const JWT_EXPIRES_IN = '1d'; // Token valid for 1 day
 
 // ===================== REGISTER =====================
-exports.registerUser = (req, res) => {
-  const { username, mobile, email, password } = req.body;
+exports.registerUser = async (req, res) => {
+  const { username, mobile, email } = req.body;
 
+  const  password = await bcrypt.hash(req.body.password,10);
+    console.log(password);
+    
   if (!username || !mobile || !email || !password) {
     return res.status(400).json({ error: 'All fields are required' });
   }
@@ -39,7 +43,7 @@ exports.loginUser = (req, res) => {
 
   // 2) Check user existence
   const query = 'SELECT * FROM users WHERE email = ? LIMIT 1';
-  db.query(query, [email], (err, results) => {
+  db.query(query, [email],async (err, results) => {
     if (err) {
       console.error('DB error:', err);
       return res.status(500).json({ error: 'Internal server error' });
@@ -52,7 +56,9 @@ exports.loginUser = (req, res) => {
     const user = results[0];
 
     // 3) Compare plain password
-    if (user.password !== password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 

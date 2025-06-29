@@ -2,23 +2,21 @@ import React, { useState, useEffect, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Offcanvas } from 'react-bootstrap';
 import '../css/navbar.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import { UserContext } from './UserContext';
 
 function Profile() {
   const [show, setShow] = useState(false);
   const [profileUrl, setProfileUrl] = useState(null);
 
-  const { selectedUser } = useContext(UserContext); // ✅ Only use selectedUser
+  const { selectedUser, darkMode } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Update profile URL whenever selectedUser changes
   useEffect(() => {
     if (selectedUser) {
       const newProfileUrl = selectedUser.profile_url
-        ? `http://localhost:3000${selectedUser.profile_url}?t=${Date.now()}`
+        ? `http://localhost:3000${selectedUser.profile_url}`
         : 'http://localhost:3000/uploads/default.jpeg';
-
       setProfileUrl(newProfileUrl);
     }
   }, [selectedUser]);
@@ -27,7 +25,7 @@ function Profile() {
   const handleShow = () => setShow(true);
 
   return (
-    <div className="p-3">
+    <div className={`p-3 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
       <button className="circle-btn" onClick={handleShow}>
         <img
           key={profileUrl}
@@ -35,20 +33,19 @@ function Profile() {
           alt="Avatar"
           className="rounded-circle shadow border border-2 border-primary"
           style={{
-            width: '55px',
-            height: '55px',
-            objectFit: 'cover',
-            marginRight: '1px',
+            width: '70px',
+            height: '60px',
+            
           }}
         />
       </button>
 
       <Offcanvas show={show} onHide={handleClose} placement="end">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Profile</Offcanvas.Title>
+        <Offcanvas.Header closeButton className={` ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
+          <Offcanvas.Title className='fs-3'>Profile</Offcanvas.Title>
         </Offcanvas.Header>
 
-        <Offcanvas.Body className="text-center">
+        <Offcanvas.Body className={`text-center ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
           <img
             key={profileUrl}
             src={profileUrl}
@@ -59,17 +56,18 @@ function Profile() {
 
           {selectedUser ? (
             <>
-              <h5 className="mb-1">{selectedUser.username}</h5>
-              <p className="text-muted mb-3">{selectedUser.email}</p>
+              <h5 className="mb-1 fs-3">{selectedUser.username}</h5>
+              <p className="mb-3 fs-4" >{selectedUser.email}</p>
             </>
           ) : (
             <p className="text-muted">User not found</p>
           )}
 
           <div className="d-grid gap-2">
-            <Button variant="outline-primary" size="sm" href="/profile">
+            {/* <Button variant="outline-primary" size="sm" href="/profile">
               View Profile
-            </Button>
+            </Button> */}
+            <Link to="/profile" className="custom-btn"> View Profile </Link>
           </div>
         </Offcanvas.Body>
       </Offcanvas>

@@ -53,7 +53,7 @@ const Right = () => {
   return (
     <div
       className={`col-md-8 d-flex flex-column ${darkMode ? 'bg-dark text-white' : ''}`}
-      style={{ height: '86.8vh' , }}
+      style={{ height: '86.2vh' , }}
     >
       {/* Header */}
       <div className={`d-flex border-bottom align-items-center p-2 ${darkMode ? 'border-secondary' : ''}`}>
@@ -71,7 +71,7 @@ const Right = () => {
         }}
       >
         {messages.map((msg, index) => (
-          <div key={index} className={`mb-2 d-flex ${msg.isSender ? 'justify-content-end' : 'justify-content-start'}`}>
+          <div key={index} className={`mb-2 fs-4 d-flex ${msg.isSender ? 'justify-content-end' : 'justify-content-start'}`}>
             <div
               className="p-2 rounded shadow-sm"
               style={{

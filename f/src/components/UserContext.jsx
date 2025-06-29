@@ -11,34 +11,49 @@ export const UserProvider = ({ children }) => {
     return localStorage.getItem('darkMode') === 'true';
   });
 
-  // Load user and selectedUser from localStorage
+  // Load user and selectedUser from localStorage safely
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedSelectedUser = localStorage.getItem('selectedUser');
 
-    if (storedUser) setUser(JSON.parse(storedUser));
-    if (storedSelectedUser) setSelectedUser(JSON.parse(storedSelectedUser));
+    try {
+      if (storedUser && storedUser !== 'undefined') {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (err) {
+      console.warn('Invalid user JSON:', err);
+      localStorage.removeItem('user');
+    }
+
+    try {
+      if (storedSelectedUser && storedSelectedUser !== 'undefined') {
+        setSelectedUser(JSON.parse(storedSelectedUser));
+      }
+    } catch (err) {
+      console.warn('Invalid selectedUser JSON:', err);
+      localStorage.removeItem('selectedUser');
+    }
   }, []);
 
-  // Persist user in localStorage
+  // Persist user to localStorage
   useEffect(() => {
-    if (user) {
+    if (user !== undefined && user !== null) {
       localStorage.setItem('user', JSON.stringify(user));
     } else {
       localStorage.removeItem('user');
     }
   }, [user]);
 
-  // Persist selectedUser in localStorage
+  // Persist selectedUser to localStorage
   useEffect(() => {
-    if (selectedUser) {
+    if (selectedUser !== undefined && selectedUser !== null) {
       localStorage.setItem('selectedUser', JSON.stringify(selectedUser));
     } else {
       localStorage.removeItem('selectedUser');
     }
   }, [selectedUser]);
 
-  // Persist dark mode toggle
+  // Persist dark mode state
   useEffect(() => {
     localStorage.setItem('darkMode', darkMode);
   }, [darkMode]);

@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { UserContext } from './UserContext';
 
 function Setting({ show, handleClose, user, setUser }) {
+  const { darkMode } = useContext(UserContext); // ✅ get darkMode
+
   const [formData, setFormData] = useState({
-    username: '',                                           
-    email: '',                        //this code for setting like update -> username , email , password nd upload img
+    username: '',
+    email: '',
     password: '',
     profile_url: ''
   });
@@ -64,13 +67,18 @@ function Setting({ show, handleClose, user, setUser }) {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      contentClassName={darkMode ? 'bg-dark text-white' : 'bg-light text-dark'} // ✅ dynamic modal theme
+    >
       <Modal.Header closeButton>
         <Modal.Title>Update Settings</Modal.Title>
       </Modal.Header>
+      
       <Modal.Body>
         <Form>
-          {/* Username */}
           <Form.Group className="mb-2">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -78,10 +86,10 @@ function Setting({ show, handleClose, user, setUser }) {
               name="username"
               value={formData.username}
               onChange={handleFormChange}
+              className={darkMode ? 'bg-dark text-white border-secondary' : ''}
             />
           </Form.Group>
 
-          {/* email */}
           <Form.Group className="mb-2">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -89,10 +97,10 @@ function Setting({ show, handleClose, user, setUser }) {
               name="email"
               value={formData.email}
               onChange={handleFormChange}
+              className={darkMode ? 'bg-dark text-white border-secondary' : ''}
             />
           </Form.Group>
 
-          {/* password */}
           <Form.Group className="mb-2">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -100,10 +108,10 @@ function Setting({ show, handleClose, user, setUser }) {
               name="password"
               value={formData.password}
               onChange={handleFormChange}
+              className={darkMode ? 'bg-dark text-white border-secondary' : ''}
             />
           </Form.Group>
 
-          {/* image  */}
           <Form.Group className="mb-2">
             <Form.Label>Image</Form.Label>
             <Form.Control
@@ -111,6 +119,7 @@ function Setting({ show, handleClose, user, setUser }) {
               name="profile_url"
               accept="image/*"
               onChange={handleFileChange}
+              className={darkMode ? 'bg-dark text-white border-secondary' : ''}
             />
           </Form.Group>
 
@@ -140,7 +149,6 @@ function Setting({ show, handleClose, user, setUser }) {
         <Button variant="secondary" onClick={handleClose}>Cancel</Button>
         <Button variant="primary" onClick={handleSaveSettings}>Save Changes</Button>
       </Modal.Footer>
-      
     </Modal>
   );
 }

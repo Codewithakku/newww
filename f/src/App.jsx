@@ -6,8 +6,6 @@ import Signup from "./components/Signup";
 import Login from './components/Login';
 
 
-
-
 function App() {
   
   return (
@@ -17,7 +15,6 @@ function App() {
               <Route path="/" element={<Signup/>} />
               <Route path="/inbox" element={<Inbox />} />
               <Route path="/login" element={<Login />} />
-             
 
             </Routes>
         </div>

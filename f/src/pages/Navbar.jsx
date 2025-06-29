@@ -52,7 +52,7 @@ const Navbar = ({ onSelectUser }) => {
   };
 
   return (
-    <nav className={`navbar ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`} style={{ width: '100%', margin: 0, padding: '10px 20px' }}>
+    <nav className={`navbar ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`} style={{ width: '100%', margin: 0, padding:'10px 20px' }}>
       <div className="container-fluid justify-content-between">
 
         {/* Search Box */}
@@ -88,8 +88,9 @@ const Navbar = ({ onSelectUser }) => {
 
         {/* Auth Buttons and Dark Mode Toggle */}
         <div className="d-flex gap-3 align-items-center">
+          
           <SenderProfile />
-
+          
           {!user && <Link to="/" className="custom-btn">Signup</Link>}
           <Link to="/login" className="custom-btn" onClick={handleLogout}>Logout</Link>
 
@@ -100,7 +101,7 @@ const Navbar = ({ onSelectUser }) => {
             style={{
               backgroundColor: 'transparent',
               border: 'none',
-              fontSize: '1.5rem',
+              fontSize: '2rem',
               color: darkMode ? 'white' : 'black',
               cursor: 'pointer'
             }}

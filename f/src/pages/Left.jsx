@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../components/UserContext';
-
+import defauld from '../../../b/uploads/default.jpeg'
 const Left = ({ onSelectUser }) => {
   const [users, setUsers] = useState([]); //store all users in users array from mySql db
   
@@ -22,16 +22,18 @@ const Left = ({ onSelectUser }) => {
   const filteredUsers = users.filter(u => u.id !== user?.id);
 
   return (
+    <>
     <div
       className={`col-md-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'} border-end`}
       style={{
-        height: '86vh',
+        height: '86.2vh',
         overflowY: 'auto',
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
       }}
     >
-      <h5 className="p-3">Contacts</h5>
+      <h5 className='' style={{marginLeft:'10px' , fontSize:'30px'}}>Contacts</h5>
+      
 
       {filteredUsers.map(u => ( 
         <div
@@ -58,17 +60,18 @@ const Left = ({ onSelectUser }) => {
               alt="Avatar"
               className="rounded-circle shadow border border-2 border-primary"
               style={{
-                width: '55px',
-                height: '55px',
+                width: '60px',
+                height: '60px',
                 objectFit: 'cover',
                 marginRight: '10px',
               }}
             />
-            <b>{u.username}</b>
+            <b style={{fontSize:'20px'}}>{u.username}</b>
          
         </div>
       ))}
     </div>
+   </>
   );
 };
 

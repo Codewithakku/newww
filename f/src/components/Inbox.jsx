@@ -27,10 +27,10 @@ function Inbox() {
   };
 
   return (
-    <div className="container-fluid pt-2 ">
-        <div style={{ width: '100%', padding: 0, margin: 0 }}>
+    <div className="container-fluid  ">
+       
            <Navbar onSelectUser={handleSelectUser} />
-        </div>
+       
     
      <div className="row" >
           <Left  onSelectUser={handleSelectUser}  /> {/* here we passes props like this  users={users}  props will catch in Left component */}

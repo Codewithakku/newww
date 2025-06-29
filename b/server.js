@@ -14,11 +14,9 @@ app.use(express.json()); // Middleware to parse JSON
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
 app.get('/', (req, res) => {
   res.send("Here render first file like login");
 });
-
 
 // Route to add data
 
