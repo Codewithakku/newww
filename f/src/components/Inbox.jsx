@@ -5,6 +5,7 @@ import Right from '../pages/Right';
 import Profile from '../components/Profile'
 import { UserContext } from './UserContext';
 
+
 function Inbox() {
 
   // Messages and selected user state
@@ -27,18 +28,18 @@ function Inbox() {
   };
 
   return (
-    <div className="container-fluid  ">
-       
-           <Navbar onSelectUser={handleSelectUser} />
-       
     
+    <div className="container-fluid  ">
+
+      <Navbar onSelectUser={handleSelectUser} />
+       
      <div className="row" >
-          <Left  onSelectUser={handleSelectUser}  /> {/* here we passes props like this  users={users}  props will catch in Left component */}
+         <Left  onSelectUser={handleSelectUser}  /> {/* here we passes props like this  users={users}  props will catch in Left component */}
          
          {selectedUser ? (
           <Right messages={messages} onSendMessage={handleSendMessage} selectedUser={selectedUser} />
           ) : (
-              <div className="col-md-8 d-flex "  >
+              <div className="col-md-8 d-flex " >
                  <p className={`p-3 rounded text-center d-flex align-items-center justify-content-center  ${ darkMode ? 'bg-dark text-white border-secondary' : 'bg-light text-dark border-dark'}` } 
                     style={{height:'100%',width:'100%' ,fontSize:'25px'}}
                  >
@@ -48,6 +49,7 @@ function Inbox() {
          )}
       </div> 
     </div>
+    
   );
 }
 

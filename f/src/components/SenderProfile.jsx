@@ -81,6 +81,7 @@ function SenderProfile() {
           )}
 
           <div className="d-grid gap-2">
+
             {/* <Button variant="outline-primary" size="sm" href="/profile"> View Profile </Button> */}
             <Link to="/profile" className="custom-btn"> View Profile </Link>
 
@@ -90,6 +91,7 @@ function SenderProfile() {
             {/* <Button variant="outline-danger" size="sm" href="/logout">
               Logout
             </Button> */}
+            
           </div>
         </Offcanvas.Body>
       </Offcanvas>

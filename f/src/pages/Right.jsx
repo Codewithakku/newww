@@ -53,12 +53,12 @@ const Right = () => {
   return (
     <div
       className={`col-md-8 d-flex flex-column ${darkMode ? 'bg-dark text-white' : ''}`}
-      style={{ height: '86.2vh' , }}
+      style={{ height: '85.4vh' , }}
     >
       {/* Header */}
-      <div className={`d-flex border-bottom align-items-center p-2 ${darkMode ? 'border-secondary' : ''}`}>
+      <div className={`d-flex border-bottom align-items-center  ${darkMode ? 'border-secondary' : ''}`}>
         <Profile selectedUser={selectedUser} />
-        <h5 className="pt-2" style={{ marginLeft: '10px' }}>{selectedUser.username}</h5>
+        <h5 className="pt-2" style={{ marginLeft: '-5px',fontSize:'25px',fontFamily:'sans-serif' }}>{selectedUser.username}</h5>
       </div>
 
       {/* Chat messages */}

@@ -26,7 +26,7 @@ const Left = ({ onSelectUser }) => {
     <div
       className={`col-md-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'} border-end`}
       style={{
-        height: '86.2vh',
+        height: '85.4vh',
         overflowY: 'auto',
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',
@@ -34,7 +34,6 @@ const Left = ({ onSelectUser }) => {
     >
       <h5 className='' style={{marginLeft:'10px' , fontSize:'30px'}}>Contacts</h5>
       
-
       {filteredUsers.map(u => ( 
         <div
           key={u.id}

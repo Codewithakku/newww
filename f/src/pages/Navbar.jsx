@@ -52,8 +52,9 @@ const Navbar = ({ onSelectUser }) => {
   };
 
   return (
-    <nav className={`navbar ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`} style={{ width: '100%', margin: 0, padding:'10px 20px' }}>
-      <div className="container-fluid justify-content-between">
+    <nav className={`navbar ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}
+         style={{ width: '100%', margin: 0, padding: '10px 0' }}>
+      <div className="w-100 d-flex justify-content-between align-items-center px-4">
 
         {/* Search Box */}
         <div className="d-flex align-items-center position-relative" style={{ width: '300px' }}>
