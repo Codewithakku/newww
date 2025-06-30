@@ -2,6 +2,8 @@ const db = require('./config/db');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const userRoutes = require('./routes/userRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 const app = express();
 const PORT = 3000;
 
@@ -10,18 +12,18 @@ app.use(cors());              //and so frontend mathi alag port like 5000 mathi 
 
 app.use(express.json()); // Middleware to parse JSON
 
-const FILE_PATH = path.join(__dirname, 'userModel.json');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.send("Here render first file like login");
 });
 
-
 // Route to add data
-const userRoutes = require('./routes/userRoutes');
-app.use('/', userRoutes);
 
-// Start the server
+app.use('/', userRoutes);
+app.use('/chat', chatRoutes);
+
+
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });

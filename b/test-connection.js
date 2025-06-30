@@ -38,9 +38,10 @@ db.connect((err) => {
           mobile VARCHAR(15) NOT NULL,
           email VARCHAR(100) NOT NULL UNIQUE,
           password VARCHAR(255) NOT NULL,
-          profile_url VARCHAR(255)
+          profile_url VARCHAR(255) DEFAULT 'default.jpeg'
         )
       `;
+
 
       db.query(createUsersTable, (err) => {
         if (err) {

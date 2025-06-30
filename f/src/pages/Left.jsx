@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { Avatar, HStack } from "@chakra-ui/react";
-
+import { UserContext } from '../components/UserContext';
+import defauld from '../../../b/uploads/default.jpeg'
 const Left = ({ onSelectUser }) => {
-  const [users, setUsers] = useState([]);
+  
+  const [users, setUsers] = useState([]); //store all users in users array from mySql db
+  
+  const { user, selectedUser, setSelectedUser, darkMode } = useContext(UserContext); // ⬅️ added darkMode
 
   useEffect(() => {
     const getUsers = async () => {
@@ -17,26 +20,58 @@ const Left = ({ onSelectUser }) => {
     getUsers();
   }, []);
 
+  const filteredUsers = users.filter(u => u.id !== user?.id);
+
   return (
-    <div className="col-md-4 bg-light- border-end"
+    <>
+    <div
+      className={`col-md-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'} border-end`}
       style={{
-        height: '80vh',
+        height: '85.2vh',
         overflowY: 'auto',
         scrollbarWidth: 'none',
-        msOverflowStyle: 'none'
-      }}>
-
-      <h5 className="p-3">Contacts</h5>
-
-      {users.map(user => (
-        <div key={user.id} className="p-3 border-bottom" style={{ cursor: 'pointer', marginLeft: 20 }} onClick={() => onSelectUser(user)}>
-          <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" className="rounded-circle"
-            style={{ width: '50px', height: '50px', objectFit: 'cover', marginRight: 13 }} alt="Avatar" />
-
-          <b style={{ paddingRight: 10 }}>{user.username}</b>
+        msOverflowStyle: 'none',
+      }}
+    >
+      <h5 className='' style={{marginLeft:'10px' , fontSize:'30px'}}>Contacts</h5>
+      
+      {filteredUsers.map(u => ( 
+        <div
+          key={u.id}
+          className={`p-3 border-bottom ${darkMode ? 'border-secondary' : ''}`}
+          style={{
+            cursor: 'pointer',
+            marginLeft: 20,
+            // backgroundColor: selectedUser?.id === u.id
+            //   ? (darkMode ? '#444' : '#e0e0e0')
+            //   : 'transparent',
+          }}
+          onClick={() => {
+            setSelectedUser(u);
+            onSelectUser(u);
+          }}
+        >
+            <img
+              src={
+                u.profile_url
+                  ? `http://localhost:3000${u.profile_url}`
+                  : 'http://localhost:3000/uploads/default.jpeg'
+              }
+              alt="Avatar"
+              className="rounded-circle shadow border border-2 border-primary"
+              style={{
+                width: '60px',
+                height: '60px',
+                objectFit: 'cover',
+                marginRight: '10px',
+              }}
+            />
+            <b style={{fontSize:'20px'}}>{u.username}</b>
+         
         </div>
       ))}
     </div>
+   </>
   );
 };
 
