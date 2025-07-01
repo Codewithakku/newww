@@ -6,6 +6,8 @@ const userRoutes = require('./routes/userRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const app = express();
 const PORT = 3000;
+const http = require('http');
+const { Server } = require('socket.io');
 
 const cors = require('cors'); //cors atla mate ke jo aapdu backend server start on 3000 
 app.use(cors());              //and so frontend mathi alag port like 5000 mathi req aave to pn aapde accept kari sakiye
@@ -23,8 +25,29 @@ app.get('/', (req, res) => {
 app.use('/', userRoutes);
 app.use('/chat', chatRoutes);
 
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
 
-app.listen(PORT, () => {
+// Socket.io connection
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  socket.on('chat message', (msg) => {
+    // Broadcast the message to all clients
+    io.emit('chat message', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
+
+server.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
 

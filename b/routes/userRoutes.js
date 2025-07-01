@@ -10,7 +10,7 @@ const {updateUser} = require('../controllers/userControllers')
 
 const upload = require('../middlewares/uploads'); // 🔁 Multer middleware
 
-router.post('/register', registerUser);
+router.post('/register', upload.single('profile_url'), registerUser);
 router.post('/login',loginUser);
 router.post('/logout', LogoutUser);
 

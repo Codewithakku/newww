@@ -3,6 +3,7 @@ import axios from 'axios';
 import { UserContext } from '../components/UserContext';
 import defauld from '../../../b/uploads/default.jpeg'
 const Left = ({ onSelectUser }) => {
+  
   const [users, setUsers] = useState([]); //store all users in users array from mySql db
   
   const { user, selectedUser, setSelectedUser, darkMode } = useContext(UserContext); // ⬅️ added darkMode
@@ -26,7 +27,7 @@ const Left = ({ onSelectUser }) => {
     <div
       className={`col-md-4 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'} border-end`}
       style={{
-        height: '85.4vh',
+        height: '85.2vh',
         overflowY: 'auto',
         scrollbarWidth: 'none',
         msOverflowStyle: 'none',

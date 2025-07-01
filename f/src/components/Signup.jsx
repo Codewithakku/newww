@@ -6,32 +6,42 @@ export default function Signup() {
   const navigate = useNavigate();
   const UsernameRef = useRef(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     UsernameRef.current.focus();
-  },[])
+  }, []);
 
-  const [formData, setFormData] = useState({   //formData is an object
+  const [formData, setFormData] = useState({
     username: '',
     mobile: '',
     email: '',
-    password: ''
+    password: '',
+    profile_url: null,
   });
 
   const handleChange = (e) => {
-    setFormData(prev => ({
+    const { id, value, files } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [e.target.id]: e.target.value 
+      [id]: files ? files[0] : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const data = new FormData();
+    for (const key in formData) {
+      data.append(key, formData[key]);
+    }
+
     try {
-      const response = await axios.post('http://localhost:3000/register', formData);   //When data is sent over the network, it doesn't go as a JavaScript object 
-      alert('Signup successful!');                                                     //— it gets converted into a string (JSON format). 
-      navigate('/login');                                                              // Why backend must parse it(parse means convert string into object) like this : app.use(express.json()); 
+      const response = await axios.post('http://localhost:3000/register', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      alert('Signup successful!');
+      navigate('/login');
     } catch (error) {
-      alert(error.response?.data || 'Signup failed! Please try again.');
+      alert(error.response?.data?.error || 'Signup failed! Please try again.');
     }
   };
 
@@ -44,7 +54,6 @@ export default function Signup() {
       >
         <h2 className="text-center mb-4 text-primary">Create Account</h2>
 
-        {/* Username */}
         <div className="mb-3 text-start">
           <label htmlFor="username" className="form-label">Username</label>
           <input
@@ -52,13 +61,12 @@ export default function Signup() {
             id="username"
             ref={UsernameRef}
             required
-            value={formData.username} //objectname.variablename
+            value={formData.username}
             onChange={handleChange}
             className="form-control"
           />
         </div>
 
-        {/* Mobile Number */}
         <div className="mb-3 text-start">
           <label htmlFor="mobile" className="form-label">Mobile Number</label>
           <input
@@ -71,7 +79,6 @@ export default function Signup() {
           />
         </div>
 
-        {/* Email */}
         <div className="mb-3 text-start">
           <label htmlFor="email" className="form-label">Email</label>
           <input
@@ -84,7 +91,6 @@ export default function Signup() {
           />
         </div>
 
-        {/* Password */}
         <div className="mb-4 text-start">
           <label htmlFor="password" className="form-label">Password</label>
           <input
@@ -97,12 +103,21 @@ export default function Signup() {
           />
         </div>
 
-        {/* Submit Button */}
+        <div className="mb-4 text-start">
+          <label htmlFor="profile_url" className="form-label">Upload Image</label>
+          <input
+            type="file"
+            id="profile_url"
+            required
+            onChange={handleChange}
+            className="form-control"
+          />
+        </div>
+
         <div className="d-grid mb-3">
           <button type="submit" className="btn btn-primary">Register</button>
         </div>
 
-        {/* Login Redirect */}
         <p className="text-center text-muted">
           Already have an account?{' '}
           <Link to="/login" className="text-decoration-none">Login</Link>

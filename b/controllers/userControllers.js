@@ -7,20 +7,21 @@ const bcrypt = require('bcrypt')
 const JWT_SECRET = 'mySuperSecretKey123'; // Strong secret for signing
 const JWT_EXPIRES_IN = '1d'; // Token valid for 1 day
 
-// ===================== REGISTER =====================
+
 exports.registerUser = async (req, res) => {
   const { username, mobile, email } = req.body;
+  const profile_url = req.file ? `/uploads/${req.file.filename}` : null; // Handle profile image upload
 
-  const  password = await bcrypt.hash(req.body.password,10);
-    console.log(password);
-    
-  if (!username || !mobile || !email || !password) {
+  const password = await bcrypt.hash(req.body.password, 10);
+
+  // Check for missing fields
+  if (!username || !mobile || !email || !password || !profile_url) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  const sql = 'INSERT INTO users (username, mobile, email, password) VALUES (?, ?, ?, ?)';
-
-  db.query(sql, [username, mobile, email, password], (err, result) => {
+  // Insert user into the database
+  const sql = 'INSERT INTO users (username, mobile, email, password, profile_url) VALUES (?, ?, ?, ?, ?)';
+  db.query(sql, [username, mobile, email, password, profile_url], (err, result) => {
     if (err) {
       if (err.code === 'ER_DUP_ENTRY') {
         return res.status(409).json({ error: 'Email already exists' });
@@ -28,7 +29,17 @@ exports.registerUser = async (req, res) => {
       return res.status(500).json({ error: 'Database error' });
     }
 
-    res.status(201).json({ message: '✅ Registration successful' });
+    // Fetch the newly registered user
+    db.query('SELECT id, username, email, profile_url FROM users WHERE id = ?', [result.insertId], (err2, results) => {
+      if (err2 || results.length === 0) {
+        return res.status(500).json({ error: 'Failed to fetch newly registered user' });
+      }
+
+      res.status(201).json({
+        message: '✅ Registration successful',
+        user: results[0],
+      });
+    });
   });
 };
 

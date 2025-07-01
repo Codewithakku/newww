@@ -3,6 +3,9 @@ import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import Profile from '../components/Profile';
 import { UserContext } from '../components/UserContext';
+import { io } from 'socket.io-client';
+
+const socket = io('http://localhost:3000');
 
 const Right = () => {
   const [messages, setMessages] = useState([]);
@@ -32,6 +35,22 @@ const Right = () => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    // Listen for real-time incoming messages
+    socket.on('chat message', (msg) => {
+      // Only add message if it's for this chat
+      if (
+        msg.senderId === selectedUser?.id && msg.receiverId === user?.id ||
+        msg.senderId === user?.id && msg.receiverId === selectedUser?.id
+      ) {
+        setMessages(prev => [...prev, { ...msg, isSender: msg.senderId === user.id }]);
+      }
+    });
+    return () => {
+      socket.off('chat message');
+    };
+  }, [selectedUser, user]);
+
   const handleSend = async () => {
     if (input.trim() === '') return;
 
@@ -39,11 +58,12 @@ const Right = () => {
       senderId: user.id,
       receiverId: selectedUser.id,
       message: input,
+      timestamp: new Date().toISOString(),
     };
 
     try {
       await axios.post('http://localhost:3000/chat/send', newMessage);
-      setMessages(prev => [...prev, { ...newMessage, isSender: 1 }]);
+      socket.emit('chat message', newMessage);
       setInput('');
     } catch (error) {
       console.error('Send error:', error);
@@ -53,7 +73,7 @@ const Right = () => {
   return (
     <div
       className={`col-md-8 d-flex flex-column ${darkMode ? 'bg-dark text-white' : ''}`}
-      style={{ height: '85.4vh' , }}
+      style={{ height: '85.2vh' , }}
     >
       {/* Header */}
       <div className={`d-flex border-bottom align-items-center  ${darkMode ? 'border-secondary' : ''}`}>

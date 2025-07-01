@@ -91,8 +91,8 @@ const Navbar = ({ onSelectUser }) => {
         <div className="d-flex gap-3 align-items-center">
           
           <SenderProfile />
-          
           {!user && <Link to="/" className="custom-btn">Signup</Link>}
+
           <Link to="/login" className="custom-btn" onClick={handleLogout}>Logout</Link>
 
           {/* Dark Mode Toggle with Icons */}
