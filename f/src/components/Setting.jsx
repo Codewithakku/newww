@@ -54,6 +54,7 @@ function Setting({ show, handleClose, user, setUser }) {
       const result = await response.json();
 
       if (response.ok) {
+        localStorage.setItem('user', JSON.stringify(result.updatedUser));
         localStorage.setItem('selectedUser', JSON.stringify(result.updatedUser));
         setUser(result.updatedUser);
         handleClose();

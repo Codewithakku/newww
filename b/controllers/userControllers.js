@@ -120,7 +120,7 @@ exports.searchUsers = (req, res) => {
   const search = req.query.search;
   if (!search) return res.json([]);
 
-  const query = `SELECT id, username,email FROM users WHERE username LIKE ?`;
+  const query = `SELECT id, username,email,profile_url FROM users WHERE username LIKE ?`;
 
   db.query(query, [`%${search}%`], (err, results) => {
     if (err) {
