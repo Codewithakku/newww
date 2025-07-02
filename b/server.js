@@ -9,18 +9,14 @@ const PORT = 3000;
 const http = require('http');
 const { Server } = require('socket.io');
 
-const cors = require('cors'); //cors atla mate ke jo aapdu backend server start on 3000 
-app.use(cors());              //and so frontend mathi alag port like 5000 mathi req aave to pn aapde accept kari sakiye
-
-app.use(express.json()); // Middleware to parse JSON
-
+const cors = require('cors');
+app.use(cors());
+app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.send("Here render first file like login");
 });
-
-// Route to add data
 
 app.use('/', userRoutes);
 app.use('/chat', chatRoutes);
@@ -33,22 +29,50 @@ const io = new Server(server, {
   }
 });
 
-// Socket.io connection
+// Track connected users: userId => socketId
+const users = {};
+
 io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
+  console.log('✅ User connected:', socket.id);
+
+  // Store the mapping between userId and socketId
+  socket.on('register', (userId) => {
+    users[userId] = socket.id;
+    console.log(`User ${userId} registered with socket ${socket.id}`);
+  });
+
+  socket.on('typing', (data) => {
+    const { senderId, receiverId } = data;
+    const receiverSocket = users[receiverId];
+    if (receiverSocket) {
+      io.to(receiverSocket).emit('typing', { senderId, receiverId });
+    }
+  });
+
+  socket.on('stopTyping', (data) => {
+    const { senderId, receiverId } = data;
+    const receiverSocket = users[receiverId];
+    if (receiverSocket) {
+      io.to(receiverSocket).emit('stopTyping', { senderId, receiverId });
+    }
+  });
 
   socket.on('chat message', (msg) => {
-    // Broadcast the message to all clients
     io.emit('chat message', msg);
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
+    console.log('❌ User disconnected:', socket.id);
+    // Remove from users object
+    for (const [userId, socketId] of Object.entries(users)) {
+      if (socketId === socket.id) {
+        delete users[userId];
+        break;
+      }
+    }
   });
 });
 
 server.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
-
-
