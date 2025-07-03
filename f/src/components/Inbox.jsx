@@ -25,21 +25,23 @@ function Inbox() {
 
   return (
     <div className="container-fluid  ">
-      <Navbar onSelectUser={handleSelectUser} />
-      <div className="row" >
-         <Left  onSelectUser={handleSelectUser}  />
-         {selectedUser ? (
-          <Right messages={messages} onSendMessage={handleSendMessage} selectedUser={selectedUser} />
-          ) : (
-              <div className="col-md-8 d-flex " >
-                 <p className={`p-3 rounded text-center d-flex align-items-center justify-content-center  ${ darkMode ? 'bg-dark text-white border-secondary' : 'bg-light text-dark border-dark'}` } 
-                    style={{height:'100%',width:'100%' ,fontSize:'25px'}}
-                 >
-                     Please select a user to start chatting.
-                 </p>     
-              </div>
-         )}
-      </div> 
+        <Navbar onSelectUser={handleSelectUser} />
+      
+        <div className="row" >
+          <Left/>
+            
+          {selectedUser ? (
+            <Right messages={messages} onSendMessage={handleSendMessage}  />
+            ) : (
+                <div className="col-md-8 d-flex " >
+                  <p className={`p-3 rounded text-center d-flex align-items-center justify-content-center  ${ darkMode ? 'bg-dark text-white border-secondary' : 'bg-light text-dark border-dark'}` } 
+                      style={{height:'100%',width:'100%' ,fontSize:'25px'}}
+                  >
+                      Please select a user to start chatting.
+                  </p>     
+                </div>
+          )}
+        </div> 
     </div>
   );
 }

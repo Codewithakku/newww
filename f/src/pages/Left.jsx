@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../components/UserContext';
 
-const Left = ({ onSelectUser }) => {
+const Left = () => {
   
   const [users, setUsers] = useState([]); //store all users in users array from mySql db
   
@@ -20,7 +20,7 @@ const Left = ({ onSelectUser }) => {
     getUsers();
   }, []);
 
-  const filteredUsers = users.filter(u => u.id !== user?.id);
+  const filteredUsers = users.filter(u => u.id !== user?.id);  //user.id is global logged user it come from useContext 
 
   return (
     <>
@@ -48,7 +48,7 @@ const Left = ({ onSelectUser }) => {
           }}
           onClick={() => {
             setSelectedUser(u);
-            onSelectUser(u);
+            // onSelectUser(u);
           }}
         >
             <img

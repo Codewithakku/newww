@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Offcanvas } from 'react-bootstrap';
 import '../css/navbar.css';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from './UserContext';
 
 function Profile() {
   const [show, setShow] = useState(false);
   const [profileUrl, setProfileUrl] = useState(null);
-
+  const [showFullImage, setShowFullImage] = useState(false);
+  
   const { selectedUser, darkMode } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -35,7 +36,7 @@ function Profile() {
           style={{
             width: '70px',
             height: '60px',
-            
+            cursor: 'pointer',
           }}
         />
       </button>
@@ -45,14 +46,44 @@ function Profile() {
           <Offcanvas.Title className='fs-3'>Profile</Offcanvas.Title>
         </Offcanvas.Header>
 
-        <Offcanvas.Body className={`text-center ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
-          <img
-            key={profileUrl}
-            src={profileUrl}
-            className="rounded-circle mb-3"
-            alt="User"
-            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-          />
+        <Offcanvas.Body className={`text-center ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>  
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <img
+              key={profileUrl}
+              src={profileUrl}
+              className="rounded-circle mb-3"
+              alt="User"
+              style={{ width: '100px', height: '100px', objectFit: 'cover', cursor: 'pointer' }}
+              onMouseEnter={() => setShowFullImage(true)}
+              onMouseLeave={() => setShowFullImage(false)}
+            />
+            {showFullImage && (
+              <div
+                style={{
+                  position: 'absolute',
+                  marginTop: '100px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: darkMode ? '#222' : '#fff',
+                  color: darkMode ? '#fff' : '#000',
+                  border: '1px solid #ccc',
+                  borderRadius: 8,
+                  padding: 8,
+                  zIndex: 100,
+                  minWidth: 200,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}
+                onMouseEnter={() => setShowFullImage(true)}
+                onMouseLeave={() => setShowFullImage(false)}
+              >
+                <img
+                  src={profileUrl}
+                  alt="Full Profile"
+                  style={{ width: '220px', height: '220px', borderRadius: '50%', objectFit: 'cover', marginBottom: 8 }}
+                />
+              </div>
+            )}
+          </div>
 
           {selectedUser ? (
             <>
@@ -63,12 +94,11 @@ function Profile() {
             <p className="text-muted">User not found</p>
           )}
 
-          <div className="d-grid gap-2">
-            {/* <Button variant="outline-primary" size="sm" href="/profile">
-              View Profile
-            </Button> */}
-            <Link to="/profile" className="custom-btn"> View Profile </Link>
-          </div>
+          {/* <div className="d-grid gap-2">
+             <Button variant="outline-primary" size="sm" href="/profile"> View Profile </Button>
+             <Link to="/profile" className="custom-btn"> View Profile </Link>
+          </div> */}
+
         </Offcanvas.Body>
       </Offcanvas>
     </div>

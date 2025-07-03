@@ -3,46 +3,47 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function Signup() {
+
   const navigate = useNavigate();
   const UsernameRef = useRef(null);
 
   useEffect(() => {
-    UsernameRef.current.focus();
-  }, []);
+     UsernameRef.current.focus();
+  }, []);                       
 
   const [formData, setFormData] = useState({
-    username: '',
-    mobile: '',
-    email: '',
-    password: '',
-    profile_url: null,
+      username: '',   
+      mobile: '',
+      email: '',
+      password: '',
+      profile_url: null,
   });
 
   const handleChange = (e) => {
-    const { id, value, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id]: files ? files[0] : value,
-    }));
+      const { id, value, files } = e.target; 
+      setFormData((prev) => ({
+        ...prev,
+        [id]: files ? files[0] : value,    //email: "abc@example.com"
+      }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+      e.preventDefault();
 
-    const data = new FormData();
-    for (const key in formData) {
-      data.append(key, formData[key]);
-    }
+      const data = new FormData();  //data is Formdatas object  //FormData() is best for when we working with files
 
-    try {
-      const response = await axios.post('http://localhost:3000/register', data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      alert('Signup successful!');
-      navigate('/login');
-    } catch (error) {
-      alert(error.response?.data?.error || 'Signup failed! Please try again.');
-    }
+      for(const key in formData) 
+      {
+        data.append(key, formData[key]);  //like data.append(username,formData['username'])
+      }
+
+      try {
+          const response = await axios.post('http://localhost:3000/register', data );
+          alert('Signup successful!');
+          navigate('/login');
+      } catch (error) {
+          alert(error.response?.data?.error || 'Signup failed! Please try again.');
+      }
   };
 
   return (
@@ -60,6 +61,7 @@ export default function Signup() {
             type="text"
             id="username"
             ref={UsernameRef}
+            
             required
             value={formData.username}
             onChange={handleChange}
@@ -72,6 +74,8 @@ export default function Signup() {
           <input
             type="tel"
             id="mobile"
+            pattern="[0-9]{10}"
+            title="Enter a valid 10-digit mobile number"
             required
             value={formData.mobile}
             onChange={handleChange}
@@ -85,6 +89,8 @@ export default function Signup() {
             type="email"
             id="email"
             required
+            pattern="^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+            title="Enter a valid email address"
             value={formData.email}
             onChange={handleChange}
             className="form-control"

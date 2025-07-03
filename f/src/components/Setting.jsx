@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { UserContext } from './UserContext';
+import axios from 'axios';
 
-function Setting({ show, handleClose, user, setUser }) {
-  const { darkMode } = useContext(UserContext); // ✅ get darkMode
+function Setting({ show, handleClose }) {
+  const { user, setUser, darkMode } = useContext(UserContext); 
 
   const [formData, setFormData] = useState({
     username: '',
@@ -21,17 +22,17 @@ function Setting({ show, handleClose, user, setUser }) {
         profile_url: user.profile_url || ''
       });
     }
-  }, []);
+  }, [user]); 
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData(prev => ({ ...prev, profile_url: file }));
+      setFormData((prev) => ({ ...prev, profile_url: file }));
     }
   };
 
@@ -42,7 +43,7 @@ function Setting({ show, handleClose, user, setUser }) {
       form.append('email', formData.email);
       form.append('password', formData.password);
 
-      if (formData.profile_url instanceof File) {
+      if (formData.profile_url instanceof File) {         //it checks formData.
         form.append('profile_url', formData.profile_url);
       }
 
@@ -54,12 +55,16 @@ function Setting({ show, handleClose, user, setUser }) {
       const result = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('user', JSON.stringify(result.updatedUser));
-        localStorage.setItem('selectedUser', JSON.stringify(result.updatedUser));
-        setUser(result.updatedUser);
+        // Get the old user (with token)
+        const oldUser = JSON.parse(localStorage.getItem('user'));
+        // Get the updated user from backend
+        const updatedUser = result.updatedUser || result.user || result; // adjust as per your backend response
+        // Preserve the token if backend does not send a new one
+        updatedUser.token = updatedUser.token || oldUser.token;
+        // Save updated user to localStorage and context
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setUser(updatedUser);
         handleClose();
-      } else {
-        alert(result.message || 'Update failed');
       }
     } catch (err) {
       console.error('Update error:', err);
@@ -67,17 +72,39 @@ function Setting({ show, handleClose, user, setUser }) {
     }
   };
 
+  const handleDeactivate = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/Deactivate', {
+        userId: user.id  
+      });
+
+      if (response.status === 200) {
+        alert('Account deactivated successfully');
+        localStorage.removeItem('user');
+        localStorage.removeItem('selectedUser');
+        setUser(null);
+        handleClose();
+      } else {
+        alert('Failed to deactivate account');
+      }
+    } catch (err) {
+      console.error('Deactivate error:', err);
+      alert('Error while deactivating account');
+    }
+  };
+
+
   return (
     <Modal
       show={show}
       onHide={handleClose}
       centered
-      contentClassName={darkMode ? 'bg-dark text-white' : 'bg-light text-dark'} // ✅ dynamic modal theme
+      contentClassName={darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}
     >
       <Modal.Header closeButton>
         <Modal.Title>Update Settings</Modal.Title>
       </Modal.Header>
-      
+
       <Modal.Body>
         <Form>
           <Form.Group className="mb-2">
@@ -124,6 +151,7 @@ function Setting({ show, handleClose, user, setUser }) {
             />
           </Form.Group>
 
+          {/* ✅ Show existing or preview image */}
           {(formData.profile_url && !(formData.profile_url instanceof File)) && (
             <div className="text-center mt-3">
               <img
@@ -147,6 +175,7 @@ function Setting({ show, handleClose, user, setUser }) {
       </Modal.Body>
 
       <Modal.Footer>
+        <Button variant="secondary" onClick={handleDeactivate}>deactivate </Button>
         <Button variant="secondary" onClick={handleClose}>Cancel</Button>
         <Button variant="primary" onClick={handleSaveSettings}>Save Changes</Button>
       </Modal.Footer>

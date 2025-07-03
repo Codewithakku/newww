@@ -12,7 +12,7 @@ exports.registerUser = async (req, res) => {
   const { username, mobile, email } = req.body;
   const profile_url = req.file ? `/uploads/${req.file.filename}` : null; // Handle profile image upload
 
-  const password = await bcrypt.hash(req.body.password, 10);
+  const password = await bcrypt.hash(req.body.password, 10); //direct access for password
 
   // Check for missing fields
   if (!username || !mobile || !email || !password || !profile_url) {
@@ -137,7 +137,7 @@ exports.updateUser = (req, res) => {
   const { username, email, password } = req.body;
   const profile_url = req.file ? `/uploads/${req.file.filename}` : null;
 
-  const fields = [];
+  const fields = [];  //fields and value used for making query
   const values = [];
 
   if (username) {
@@ -179,5 +179,24 @@ exports.updateUser = (req, res) => {
   });
 };
 
+
+exports.Deactivate = (req, res) => {
+  const userId = req.body.userId;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  const sql = 'DELETE FROM users WHERE id = ?';
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error('Deletion failed:', err);
+      return res.status(500).json({ error: 'Failed to delete user' });
+    }
+
+    res.json({ message: 'User account deleted successfully' });
+  });
+};
 
 

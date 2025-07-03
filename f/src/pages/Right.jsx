@@ -151,7 +151,7 @@ const Right = () => {
               {msg.message}
               <div
                 style={{
-                  fontSize: '0.75rem',
+                  fontSize: '1rem',
                   marginTop: '2px',
                   color: darkMode ? '#ccc' : '#000',
                 }}

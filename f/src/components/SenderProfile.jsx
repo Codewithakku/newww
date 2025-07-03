@@ -7,10 +7,10 @@ import { UserContext } from './UserContext';
 import { Link } from 'react-router-dom';
 
 function SenderProfile() {
-  const [show, setShow] = useState(false);
   const [user, setUser] = useState(null);
+  const [show, setShow] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-
+  const [showFullImage, setShowFullImage] = useState(false);
 
   const { darkMode } = useContext(UserContext);
 
@@ -37,7 +37,11 @@ function SenderProfile() {
   
   return (
     <div className={`p-3 ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
-      <button className="circle-btn" onClick={handleShow}  style={{width:'55px',height:'55px'}}>
+      <button
+        className="circle-btn"
+        onClick={handleShow}
+        style={{width:'55px',height:'55px'}}
+      >
         <img
           src={
             user?.profile_url?.startsWith('/uploads/')
@@ -60,16 +64,50 @@ function SenderProfile() {
         </Offcanvas.Header>
 
         <Offcanvas.Body className={`text-center   ${darkMode ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
-          <img
-            src={
-              user?.profile_url?.startsWith('/uploads/')
-                ? `http://localhost:3000${user.profile_url}`
-                : `http://localhost:3000/uploads/${user?.profile_url || 'default.jpeg'}`
-            }
-            className="rounded-circle mb-3"
-            alt="User"
-            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-          />
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <img
+              src={
+                user?.profile_url?.startsWith('/uploads/')
+                  ? `http://localhost:3000${user.profile_url}`
+                  : `http://localhost:3000/uploads/${user?.profile_url || 'default.jpeg'}`
+              }
+              className="rounded-circle mb-3"
+              alt="User"
+              style={{ width: '100px', height: '100px', objectFit: 'cover', cursor: 'pointer' }}
+              onMouseEnter={() => setShowFullImage(true)}
+              onMouseLeave={() => setShowFullImage(false)}
+            />
+            {showFullImage && (
+              <div
+                style={{
+                  position: 'absolute',
+                  marginTop:'200px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: darkMode ? '#222' : '#fff',
+                  color: darkMode ? '#fff' : '#000',
+                  border: '1px solid #ccc',
+                  borderRadius: 8,
+                  padding: 8,
+                  zIndex: 100,
+                  minWidth: 200,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}
+                onMouseEnter={() => setShowFullImage(true)}
+                onMouseLeave={() => setShowFullImage(false)}
+              >
+                <img
+                  src={
+                    user?.profile_url?.startsWith('/uploads/')
+                      ? `http://localhost:3000${user.profile_url}`
+                      : `http://localhost:3000/uploads/${user?.profile_url || 'default.jpeg'}`
+                  }
+                  alt="Full Profile"
+                  style={{ width: '220px', height: '220px', borderRadius: '50%', objectFit: 'cover', marginBottom: 8 }}
+                />
+              </div>
+            )}
+          </div>
 
           {user ? (
             <>
@@ -82,12 +120,11 @@ function SenderProfile() {
 
           <div className="d-grid gap-2">
 
-            {/* <Button variant="outline-primary" size="sm" href="/profile"> View Profile </Button> */}
-            <Link to="/profile" className="custom-btn"> View Profile </Link>
-
             <Button className='custom-btn' onClick={() => setShowSettings(true)} > Setting </Button>
             
             <Link to="/login" className="custom-btn" onClick={handleLogout}>Logout</Link>
+            
+            
             {/* <Button variant="outline-danger" size="sm" href="/logout">
               Logout
             </Button> */}

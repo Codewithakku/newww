@@ -5,14 +5,14 @@ import axios from 'axios';
 import '../css/navbar.css';
 import SenderProfile from '../components/SenderProfile';
 import { UserContext } from '../components/UserContext';
-import { FaMoon, FaSun } from 'react-icons/fa'; // ✅ Icon import
+import { FaMoon, FaSun } from 'react-icons/fa'; 
 
 const Navbar = ({ onSelectUser }) => {
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
 
-  const { user, setUser, darkMode, toggleDarkMode } = useContext(UserContext);
+  const { user, setUser, darkMode, toggleDarkMode } = useContext(UserContext);   //this called object destructuring
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
